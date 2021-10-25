@@ -1,3 +1,4 @@
+import geocoder
 import pyttsx3
 import requests
 from bs4 import BeautifulSoup
@@ -37,11 +38,17 @@ def getWeather(url):
 
     return forcast_string
 
+location=geocoder.ip("me")
+city=location.city
+post_code=location.postal.lower()
+
+print("https://www.bbc.co.uk/news/localnews/"+post_code+"-"+post_code+"/0")
+
 engine=pyttsx3.init()
 engine.setProperty('rate', 150)
 engine.say(
             "The latest BBC News headlines are: \n"+getHeadlines("https://www.bbc.co.uk/news")+
             "The latest sport headlines are: \n"+getHeadlines("https://www.bbc.co.uk/sport")+
-            "The latest South East Wales headlines are: \n"+getHeadlines("https://www.bbc.co.uk/news/wales/south_east_wales")+
-            "The weather forcast for Newport is: \n"+getWeather("http://www.bbc.co.uk/weather/2641598"))
+            "The latest local headlines for "+city+" are: \n"+getHeadlines("https://www.bbc.co.uk/news/localnews/"+post_code+"-"+post_code+"/0")+
+            "The weather forcast for "+city+" is: \n"+getWeather("http://www.bbc.co.uk/weather/"+post_code))
 engine.runAndWait()
